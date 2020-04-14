@@ -67,35 +67,45 @@ export default class SearchArticle extends Component {
 
    //Receive Data For First Time
    getData = (event)=>{
-
-
-       if(this.state.queryString!==""){
-           let yearData = []
-        axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${this.state.queryString.toLowerCase()}&begin_date=20110101&end_date=20200410&sort=newest&page=${this.state.pageNumber}&api-key=xrp7NPZMKRQ3U8nmHM5UMXu2XwBKYXei`)
-        .then( res => this.setState({data: res.data.response.docs,status: true, pageNumber:0 }))
         
-        axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${this.state.queryString.toLowerCase()}&facet=true&facet_fields=pub_year&begin_date=20110101&end_date=20200410&p&api-key=xrp7NPZMKRQ3U8nmHM5UMXu2XwBKYXei`)
-        .then(res => {
-            let articles = res.data.response.facets.pub_year.terms
-            for(let i=2011;i<=2020;i++){
-            articles.forEach(element => {
-                let term = parseInt(element.term,10)
-                    if(term === i){
-                        yearData.push(element.count)
-                        return true
-                    }
-                    })
-                }
-            }).finally(()=>{
-                this.setState({
-                    yearWiseArticlesPublished: yearData
-                })
-            })
-            
+        this.setState({
+            loading:"loading",
+            status:false
+        },()=>{
+            if(this.state.queryString!==""){
+                let yearData = []
+             axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${this.state.queryString.toLowerCase()}&begin_date=20110101&end_date=20200410&sort=newest&page=${this.state.pageNumber}&api-key=xrp7NPZMKRQ3U8nmHM5UMXu2XwBKYXei`)
+             .then( res => this.setState({data: res.data.response.docs,status: true, pageNumber:0 }))
+             
+             axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${this.state.queryString.toLowerCase()}&facet=true&facet_fields=pub_year&begin_date=20110101&end_date=20200410&p&api-key=xrp7NPZMKRQ3U8nmHM5UMXu2XwBKYXei`)
+             .then(res => {
+                 let articles = res.data.response.facets.pub_year.terms
+                 for(let i=2011;i<=2020;i++){
+                 articles.forEach(element => {
+                     let term = parseInt(element.term,10)
+                         if(term === i){
+                             yearData.push(element.count)
+                             return true
+                         }
+                         })
+                     }
+                 }).finally(()=>{
+                     this.setState({
+                         yearWiseArticlesPublished: yearData,
+                         loading:""
+                     })
+                 })
+                 
+     
+            }
+        })
 
-       }else{
-           alert('Please enter the Article to be searched')
-       }
+        if(this.state.queryString===''){
+            alert('Please enter the Article to be searched')
+            this.setState({
+                loading:''
+            })
+        }
      
        event.preventDefault();
    }

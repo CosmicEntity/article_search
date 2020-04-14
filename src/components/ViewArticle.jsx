@@ -3,8 +3,11 @@ import React from 'react'
 
 export default function ViewArticle(props) {
 
+    
+
 
     if(props.status){
+        
         const articles = props.render
 
         const article = articles.map((article)=>{
@@ -38,7 +41,7 @@ export default function ViewArticle(props) {
             <div className='ui violet ribbon label'>
                 <h4>Page:  <span className={`ui basic white inverted ${props.loading} mini button`}>{props.pageNumber}</span></h4>
             </div>
-            <table className="ui celled striped table">
+            <table className="ui celled striped table unstackable">
             <thead>
                 <tr>
                 <th>Published Date</th>
@@ -69,11 +72,17 @@ export default function ViewArticle(props) {
             </div>
         )
     }else{
-        return(<div className="start">
+        if(`${props.loading}`!=='loading'){
+        return(     <div className="start container">
                     <h1>Search for breaking news from across the world, across the times.</h1>
                     <img src="https://img.icons8.com/nolan/512/news.png" alt='newspaper icon'/>
                     
-            </div>)
+            </div>)} else{
+                return(
+                    <div className="load">
+                        <div class="ui active centered text inline big loader">Loading</div>
+                </div>)
+            }
     }
    
 }
