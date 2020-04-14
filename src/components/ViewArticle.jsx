@@ -39,9 +39,9 @@ export default function ViewArticle(props) {
         return (
             <div className="container">
             <div className='ui violet ribbon label'>
-                <h4>Page:  <span className={`ui basic white inverted ${props.loading} mini button`}>{props.pageNumber}</span></h4>
+                <h4>Page:  <span className={`ui basic white inverted ${props.loading} medium button`}>{props.pageNumber}</span></h4>
             </div>
-            <table className="ui celled striped table unstackable">
+            <table className="ui celled violet striped table unstackable">
             <thead>
                 <tr>
                 <th>Published Date</th>

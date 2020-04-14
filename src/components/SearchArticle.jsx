@@ -17,7 +17,8 @@ export default class SearchArticle extends Component {
             status: false,
             pageNumber: 0,
             loading:"",
-            yearWiseArticlesPublished:[]
+            yearWiseArticlesPublished:[],
+            totalArticles: 0
 
 
         
@@ -36,6 +37,7 @@ export default class SearchArticle extends Component {
 
    //Get Data for Next Page
    changeNextPageNumber = ()=>{
+       if(this.state.pageNumber < (this.state.totalArticles)/10){
        const page = this.state.pageNumber +1
 
        this.setState({
@@ -45,6 +47,7 @@ export default class SearchArticle extends Component {
         axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${this.state.queryString.toLowerCase()}&begin_date=20110101&end_date=20200410&sort=newest&page=${this.state.pageNumber}&api-key=xrp7NPZMKRQ3U8nmHM5UMXu2XwBKYXei`)
         .then( res => this.setState({data: res.data.response.docs,status: true,loading:"" }))
        })
+    }
 
        
    }
@@ -75,7 +78,7 @@ export default class SearchArticle extends Component {
             if(this.state.queryString!==""){
                 let yearData = []
              axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${this.state.queryString.toLowerCase()}&begin_date=20110101&end_date=20200410&sort=newest&page=${this.state.pageNumber}&api-key=xrp7NPZMKRQ3U8nmHM5UMXu2XwBKYXei`)
-             .then( res => this.setState({data: res.data.response.docs,status: true, pageNumber:0 }))
+             .then( res => this.setState({data: res.data.response.docs,status: true, pageNumber:0,totalArticles:res.data.response.meta.hits }))
              
              axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${this.state.queryString.toLowerCase()}&facet=true&facet_fields=pub_year&begin_date=20110101&end_date=20200410&p&api-key=xrp7NPZMKRQ3U8nmHM5UMXu2XwBKYXei`)
              .then(res => {
